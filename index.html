@@ -1,206 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Year-End Note Builder</title>
+  <meta charset="UTF-8" />
+  <title>Year-End Letter Builder</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 0 20px;
-      color: #333;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
+
+    .left, .right {
+      padding: 20px;
+      box-sizing: border-box;
     }
-    h2 {
-      margin-top: 32px;
-      margin-bottom: 8px;
-      font-size: 1.1rem;
+
+    .left {
+      flex: 1;
+      overflow-y: auto;
+      background-color: #f9f9f9;
     }
+
+    .right {
+      flex: 1;
+      background-color: #fff;
+      border-left: 1px solid #ddd;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    h1, h2 {
+      margin-top: 0;
+    }
+
     .button {
-      display: inline-block;
-      padding: 8px 12px;
+      padding: 6px 10px;
       margin: 4px;
       border: 1px solid #ccc;
-      border-radius: 8px;
-      background: #f5f5f7;
+      border-radius: 6px;
+      background: #f0f0f0;
       cursor: pointer;
-      transition: background 0.2s;
-      font-size: 0.9rem;
     }
+
     .button.selected {
-      background: #007aff;
-      color: #fff;
+      background-color: #007aff;
+      color: white;
       border-color: #007aff;
     }
-    #generate {
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .section h2 {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .section-content {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .section.open .section-content {
+      display: block;
+    }
+
+    label, select, input, textarea {
       display: block;
       width: 100%;
-      margin: 24px 0;
-      padding: 12px;
-      background: #007aff;
-      color: #fff;
-      border: none;
-      border-radius: 8px;
+      margin-bottom: 12px;
       font-size: 1rem;
-      cursor: pointer;
     }
+
+    textarea {
+      height: 100px;
+    }
+
     #output {
       white-space: pre-wrap;
-      background: #f5f5f7;
-      padding: 16px;
-      border-radius: 8px;
-      border: 1px solid #e0e0e0;
-      font-size: 0.95rem;
+      font-size: 1rem;
+      padding: 20px;
     }
-    label {
-      font-size: 0.95rem;
-    }
-    input, select {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 0.95rem;
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .right {
+        position: static;
+        height: auto;
+        border-left: none;
+        border-top: 1px solid #ddd;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>Year-End Note Builder</h1>
+  <div class="left">
+    <h1>Year-End Letter Builder</h1>
 
-  <label>
-    Student Name:
-    <input type="text" id="studentName" placeholder="Enter student name">
-  </label>
+    <label>Student Name:
+      <input type="text" id="studentName" placeholder="Enter student name" />
+    </label>
 
-  <label>
-    Pronouns:
-    <select id="pronouns">
-      <option value="she">She/Her</option>
-      <option value="he">He/Him</option>
-      <option value="they">They/Them</option>
-    </select>
-  </label>
+    <label>Pronouns:
+      <select id="pronouns">
+        <option value="she">She/Her</option>
+        <option value="he">He/Him</option>
+        <option value="they">They/Them</option>
+      </select>
+    </label>
 
-  <div id="sections"></div>
+    <!-- Sections will be inserted here -->
+    <div id="sections"></div>
 
-  <button id="generate">Generate Note</button>
+    <div class="section">
+      <h2>✍️ Personal Anecdote</h2>
+      <label for="anecdotePrompt">Prompt:</label>
+      <select id="anecdotePrompt">
+        <option value="Describe a moment that stood out this year—something positive, memorable, or unique.">
+          Describe a moment that stood out this year—something positive, memorable, or unique.
+        </option>
+        <option value="Share a breakthrough or milestone moment during therapy.">
+          Share a breakthrough or milestone moment during therapy.
+        </option>
+        <option value="Describe something {StudentName} said or did that surprised you.">
+          Describe something {StudentName} said or did that surprised you.
+        </option>
+        <option value="Write about a time {StudentName} made someone laugh or smile.">
+          Write about a time {StudentName} made someone laugh or smile.
+        </option>
+        <option value="Reflect on a challenge {StudentName} overcame this year.">
+          Reflect on a challenge {StudentName} overcame this year.
+        </option>
+      </select>
+      <textarea id="anecdoteText" placeholder="Write your personal reflection here..."></textarea>
+    </div>
+  </div>
 
-  <div id="output"></div>
+  <div class="right">
+    <h2>📄 Live Preview</h2>
+    <div id="output">Your note will appear here...</div>
+  </div>
 
   <script>
-    const categories = [
-      {
-        title: 'Opening Statements',
-        type: 'sentence',
-        statements: [
-          "It has been a pleasure working with {StudentName} this year.",
-          "{StudentName} has made wonderful progress this year in speech therapy.",
-          "Working with {StudentName} has truly been rewarding this school year."
-        ]
-      },
-      {
-        title: 'Strengths & Positive Attributes',
-        type: 'sentence',
-        statements: [
-          "{StudentName} is consistently motivated and eager to participate.",
-          "{StudentName} demonstrates remarkable resilience when facing challenges.",
-          "{StudentName} actively engages in sessions and shows great enthusiasm."
-        ]
-      },
-      {
-        title: 'Speech & Language Progress',
-        type: 'list',
-        statements: [
-          "{StudentName} has made significant strides in articulation skills, especially with challenging sounds.",
-          "{StudentName} now consistently follows multi-step directions with greater independence.",
-          "{StudentName}'s expressive vocabulary has expanded noticeably this year."
-        ]
-      },
-      {
-        title: 'Personal Anecdote',
-        type: 'sentence',
-        statements: [
-          "I fondly remember when {StudentName} confidently tried a new word during our session and couldn't stop smiling.",
-          "One memorable moment was when {StudentName} used {his/her/their} new phrase to greet a classmate unprompted.",
-          "{StudentName}'s excitement while sharing stories about {his/her/their} weekend was a highlight of our sessions."
-        ]
-      },
-      {
-        title: 'Transition Suggestions',
-        type: 'sentence',
-        statements: [
-          "Providing clear, routine-based instructions in middle school will help {StudentName} feel secure.",
-          "Encouraging peer interactions through structured group activities would benefit {StudentName}'s transition.",
-          "Continued support with visual cues will ease the transition to middle school expectations."
-        ]
-      },
-      {
-        title: 'Closing Statements',
-        type: 'sentence',
-        statements: [
-          "I am confident {StudentName} will achieve continued success in middle school.",
-          "Thank you for your continued support and collaboration this year.",
-          "Wishing {StudentName} all the best in the exciting transition ahead."
-        ]
-      }
-    ];
-
     const pronounMap = {
-      she:  { sub: 'she',  obj: 'her',  poss: 'her',    refl: 'herself' },
-      he:   { sub: 'he',   obj: 'him',  poss: 'his',    refl: 'himself' },
-      they: { sub: 'they', obj: 'them', poss: 'their',  refl: 'themself' }
+      she: { sub: "she", obj: "her", poss: "her", refl: "herself" },
+      he: { sub: "he", obj: "him", poss: "his", refl: "himself" },
+      they: { sub: "they", obj: "them", poss: "their", refl: "themself" },
     };
+
+    const categories = [
+  {
+    title: "Opening Statements",
+    type: "sentence",
+    statements: [
+      "It’s been such a joy getting to know {StudentName} this year.",
+      "I’ve truly enjoyed spending time with {StudentName} in speech sessions.",
+      "This year, {StudentName} has brought unique energy and presence to our time together.",
+      "Every session with {StudentName} has been a highlight in my week.",
+      "From the very beginning, {StudentName} approached therapy with an open mind and heart.",
+      "{StudentName} has shown remarkable growth throughout our time this year.",
+      "I’ve had the privilege of watching {StudentName} grow more confident with every passing month.",
+      "{StudentName} quickly became a thoughtful and fun participant in speech.",
+      "I have appreciated {StudentName}’s curiosity and willingness to try new strategies.",
+      "Working with {StudentName} has been equal parts rewarding and inspiring.",
+      "It has been a pleasure supporting {StudentName} on their communication journey.",
+      "{StudentName} has made every session meaningful with their presence and effort.",
+      "I’ve really valued the time I’ve spent with {StudentName} this year.",
+      "{StudentName} approached therapy with consistency, care, and determination.",
+      "I’ve had the chance to see so many sides of {StudentName}—funny, thoughtful, determined.",
+      "{StudentName} has added color and brightness to our work together.",
+      "Our sessions were always better with {StudentName} in them.",
+      "I’m grateful for the chance to support {StudentName} this school year.",
+      "This year was filled with small wins and big smiles, thanks to {StudentName}.",
+      "{StudentName} came to each session ready to participate and ready to grow.",
+      "Watching {StudentName} find their voice this year has been incredibly special."
+    ]
+  },
+  {
+    title: "Strengths & Positive Attributes",
+    type: "sentence",
+    statements: [
+      "{StudentName} brings a natural kindness that helps create a positive environment.",
+      "{StudentName} is quick to laugh, and that joy is often shared with others in the room.",
+      "{StudentName} shows perseverance even when tasks feel challenging.",
+      "{StudentName} listens closely and considers new ideas thoughtfully.",
+      "{StudentName} has a steady sense of curiosity and a growing confidence to explore.",
+      "{StudentName} often takes pride in their progress, which fuels continued effort.",
+      "{StudentName} is eager to connect and communicate in ways that feel authentic.",
+      "{StudentName} responds well to encouragement and is learning to advocate for {himself/herself/themself}.",
+      "{StudentName} demonstrates quiet leadership, often by modeling focus and cooperation.",
+      "{StudentName} has a spark of creativity that shines through in conversations and activities.",
+      "{StudentName} approaches new challenges with a can-do attitude.",
+      "{StudentName} is reflective and often self-monitors their own progress with growing awareness.",
+      "{StudentName} brings a calm presence that helps others feel at ease.",
+      "{StudentName} collaborates well in both structured and flexible settings.",
+      "{StudentName} is tuned in to how others feel and often offers kindness without prompting.",
+      "{StudentName} expresses ideas with color, detail, and a strong personal style.",
+      "{StudentName} takes initiative and is beginning to guide their own learning process.",
+      "{StudentName} shows patience and empathy during peer interactions.",
+      "{StudentName} is highly observant, often noticing subtle cues and responding with care.",
+      "{StudentName} can shift between silly and serious in a way that shows emotional maturity.",
+      "{StudentName}'s personality shines through their communication in playful, thoughtful ways."
+    ]
+  },
+  {
+    title: "Speech & Language Progress",
+    type: "list",
+    statements: [
+      "{StudentName} has improved overall intelligibility by consistently producing target sounds.",
+      "{StudentName} now self-corrects sound errors with minimal prompting.",
+      "{StudentName} demonstrates increased awareness of speech production.",
+      "{StudentName} is using more complex sentence structures to express ideas.",
+      "{StudentName} has expanded their vocabulary and applies new words in conversation.",
+      "{StudentName} follows multistep directions more independently and with greater accuracy.",
+      "{StudentName} understands and uses spatial and temporal concepts with increased consistency.",
+      "{StudentName} initiates conversation and asks relevant questions during structured activities.",
+      "{StudentName} is better able to maintain a topic across conversational turns.",
+      "{StudentName} identifies and repairs communication breakdowns more effectively.",
+      "{StudentName} demonstrates growing confidence when speaking in front of peers.",
+      "{StudentName} participates in group discussions with clearer articulation and purpose.",
+      "{StudentName} uses descriptive language to add detail to stories and explanations.",
+      "{StudentName} understands a wider range of figurative language and idioms.",
+      "{StudentName} uses visual supports as needed but increasingly relies on verbal cues.",
+      "{StudentName} applies strategies such as repeating or rephrasing to clarify ideas.",
+      "{StudentName} understands and uses past, present, and future tense with more accuracy.",
+      "{StudentName} uses AAC (or other supports) with improved fluency and intent.",
+      "{StudentName} is learning to advocate for communication needs during academic tasks.",
+      "{StudentName} applies speech and language skills across different settings with greater ease.",
+      "{StudentName} celebrates communication successes and takes pride in progress."
+    ]
+  },
+  {
+    title: "Transition Suggestions",
+    type: "sentence",
+    statements: [
+      "Providing consistent routines and visual schedules will support {StudentName}'s adjustment to new environments.",
+      "Encouraging peer collaboration through structured social opportunities will benefit {StudentName}'s confidence.",
+      "{StudentName} will thrive with predictable transitions and clear expectations in the classroom.",
+      "Continued modeling and reinforcement of self-advocacy skills will help {StudentName} speak up for their needs.",
+      "Access to calming strategies or breaks as needed will help {StudentName} stay regulated during busy school days.",
+      "{StudentName} may benefit from adult check-ins at the start and end of the day to build predictability.",
+      "Middle school routines that allow for repetition and previewing of tasks will help build independence.",
+      "Offering structured opportunities to practice conversation skills in small groups can support social growth.",
+      "Continued collaboration between home and school teams will be important to ensure {StudentName}'s success.",
+      "Pairing {StudentName} with a supportive peer during unstructured times may foster connection and confidence.",
+      "Giving {StudentName} space to explore interests in creative electives may open new avenues for communication.",
+      "Maintaining access to visual or written cues will ease cognitive load as academic demands increase.",
+      "Reinforcing routines for organizing materials and assignments will support executive functioning.",
+      "Explicit instruction in navigating new social environments will benefit {StudentName}'s peer interactions.",
+      "Encouraging {StudentName} to reflect on their own progress will support a sense of agency and pride.",
+      "Providing advance notice before changes in routine can help {StudentName} feel more secure.",
+      "{StudentName} will benefit from familiar adult support while building new connections in middle school.",
+      "Continuing speech services with targeted goals will support ongoing growth in communication.",
+      "Encouraging participation in student-led or small-group projects will help {StudentName} build community.",
+      "Supporting {StudentName} in generalizing learned skills across classes will help ensure continuity.",
+      "Helping {StudentName} identify safe adults and calm spaces in the new building can promote emotional safety."
+    ]
+  },
+  {
+    title: "Closing Statements",
+    type: "sentence",
+    statements: [
+      "I’m excited to see what {StudentName} accomplishes next.",
+      "Thank you for your support and collaboration throughout the year.",
+      "I feel lucky to have been a part of {StudentName}’s growth this year.",
+      "With continued encouragement and structure, {StudentName} is well-prepared for what’s ahead.",
+      "I have no doubt that {StudentName} will continue to thrive with the right support.",
+      "It’s been a joy to witness {StudentName}’s progress and confidence bloom.",
+      "I’m proud of how far {StudentName} has come and eager to see where they go next.",
+      "Middle school will bring new opportunities—and I trust {StudentName} will rise to the occasion.",
+      "I’ll miss working with {StudentName}, but I’m confident they’ll keep shining.",
+      "Thank you for sharing {StudentName} with me this year—it’s made a real impact.",
+      "I’m hopeful that {StudentName} enters the next chapter with excitement and a sense of belonging.",
+      "I know {StudentName} will continue to grow in wonderful ways with the right supports in place.",
+      "It’s always bittersweet to say goodbye, but I leave this year proud of the journey we shared.",
+      "Please don’t hesitate to reach out if there’s anything I can do to support the transition.",
+      "{StudentName} has left a lasting impression—and I believe they’ll continue to do so.",
+      "I’m cheering for {StudentName} as they take this next big step.",
+      "The foundation we built together this year will support future success.",
+      "I’m hopeful {StudentName} enters middle school feeling prepared, proud, and excited.",
+      "This isn’t goodbye—it’s a celebration of all that {StudentName} has achieved.",
+      "{StudentName} leaves this year with skills, confidence, and a story worth telling.",
+      "Here’s to the next adventure—{StudentName} is ready."
+    ]
+  }
+];
 
     function init() {
       const container = document.getElementById('sections');
       categories.forEach((cat, i) => {
         const section = document.createElement('div');
-        section.innerHTML = `<h2>${cat.title}</h2>`;
+        section.classList.add('section');
+        section.dataset.index = i;
+
+        const header = document.createElement('h2');
+        header.textContent = `▸ ${cat.title}`;
+        header.addEventListener('click', () => {
+          section.classList.toggle('open');
+          header.textContent = section.classList.contains('open') ? `▼ ${cat.title}` : `▸ ${cat.title}`;
+        });
+
+        const content = document.createElement('div');
+        content.classList.add('section-content');
+
         cat.statements.forEach((text, j) => {
           const btn = document.createElement('button');
           btn.textContent = text;
           btn.className = 'button';
-          btn.onclick = () => btn.classList.toggle('selected');
-          btn.dataset.category = i;
-          btn.dataset.index = j;
-          section.appendChild(btn);
+          btn.addEventListener('click', () => {
+            btn.classList.toggle('selected');
+            updatePreview();
+          });
+          content.appendChild(btn);
         });
+
+        section.appendChild(header);
+        section.appendChild(content);
         container.appendChild(section);
       });
     }
 
-    function generate() {
-      const name = document.getElementById('studentName').value.trim() || '{StudentName}';
-      const pronSel = document.getElementById('pronouns').value;
-      const p = pronounMap[pronSel];
-      let note = '';
-      categories.forEach((cat, idx) => {
-        const selectedBtns = document.querySelectorAll(`button.selected[data-category="${idx}"]`);
-        if (!selectedBtns.length) return;
-        let texts = Array.from(selectedBtns).map(btn => btn.textContent);
-        texts = texts.map(str =>
-          str.replace(/{StudentName}/g, name)
-             .replace(/{he\/she\/they}/g, p.sub)
-             .replace(/{him\/her\/them}/g, p.obj)
-             .replace(/{his\/her\/their}/g, p.poss)
-             .replace(/{himself\/herself\/themself}/g, p.refl)
-        );
+    function updatePreview() {
+      const name = document.getElementById("studentName").value.trim() || "{StudentName}";
+      const p = pronounMap[document.getElementById("pronouns").value];
+      let letter = "";
+
+      categories.forEach((cat, i) => {
+        const section = document.querySelector(`.section[data-index='${i}']`);
+        const selected = [...section.querySelectorAll('.button.selected')].map(btn => btn.textContent);
+        if (!selected.length) return;
         if (cat.type === 'list') {
-          note += texts.map(t => '• ' + t).join('\n') + '\n';
+          letter += selected.map(s => `• ${s}`).join("\n") + "\n\n";
         } else {
-          note += texts.join(' ') + '\n\n';
+          letter += selected.join(" ") + "\n\n";
         }
       });
-      document.getElementById('output').textContent = note.trim();
+
+      const anecdote = document.getElementById('anecdoteText').value.trim();
+      if (anecdote) {
+        letter += anecdote + "\n\n";
+      }
+
+      letter = letter
+        .replace(/{StudentName}/g, name)
+        .replace(/{he\/she\/they}/g, p.sub)
+        .replace(/{him\/her\/them}/g, p.obj)
+        .replace(/{his\/her\/their}/g, p.poss)
+        .replace(/{himself\/herself\/themself}/g, p.refl);
+
+      document.getElementById("output").textContent = letter.trim();
     }
 
-    document.getElementById('generate').addEventListener('click', generate);
+    document.getElementById("studentName").addEventListener("input", updatePreview);
+    document.getElementById("pronouns").addEventListener("change", updatePreview);
+    document.getElementById("anecdoteText").addEventListener("input", updatePreview);
+    document.getElementById("anecdotePrompt").addEventListener("change", e => {
+      document.getElementById("anecdoteText").placeholder = e.target.value;
+    });
+
     init();
   </script>
 </body>
