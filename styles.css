@@ -67,6 +67,20 @@ body {
   .section {
     margin-bottom: 20px;
   }
+  #sections > div.section.open {
+    margin: 5px 5px;
+    border: 2px solid #005bb5;
+    border-radius: 10px;
+    padding: 5px;
+    transition: .2s;
+  }
+  #sections > div.section {
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: 1s;
+    margin: 5px 5px;
+    padding: 5px;
+  }
   
   .section h2 {
     cursor: pointer;
@@ -138,6 +152,9 @@ color: #005bb5;
 
 #goalAreaChooser{
   display: flex;
+  padding: 1em 1em;
+  font-size: small;
+
 }
 
 .goal-chooser {
@@ -213,6 +230,17 @@ color: #005bb5;
   position: absolute;
 }
 
+
+#goalAreaChooser input[type="checkbox"]:checked + span {
+  background: #007aff;
+  color: #fff;
+}
+
+.fancy-checkbox:has(input[type="checkbox"]:checked) {
+  color: #007aff;
+  transition: color 0.16s, color 0.16s;
+  text-decoration: underline;
+}
   
   @media (max-width: 900px) {
     body {

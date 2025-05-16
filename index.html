@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Year-End Letter Builder PROTOTYPE</title>
+  <title>Progress Note - PROTOTYPE</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="left">
-    <h1>Year-End Letter Builder</h1>
+    <h1>Progress Note Builder</h1>
+
 
     <label>Student Name:
       <input type="text" id="studentName" placeholder="Enter student name" />
@@ -15,18 +16,16 @@
 
     <label>Pronouns:
       <select id="pronouns">
-        <option value="she">She/Her</option>
         <option value="he">He/Him</option>
+        <option value="she">She/Her</option>
         <option value="they">They/Them</option>
       </select>
     </label>
-    <h2>Goal Areas</h2>
+
     <div id="goalAreaChooser" class="goal-chooser">
-      <label class="fancy-checkbox">
-        <input type="checkbox" value="articulation">
-        <span class="checkmark"></span>
-        Articulation
-      </label>
+      <h1>Goals <i style="font-size: small; color:#007aff">Select to add sections</i></h1>
+      
+
       <label class="fancy-checkbox">
         <input type="checkbox" value="receptive">
         <span class="checkmark"></span>
@@ -38,6 +37,11 @@
         Expressive Language
       </label>
       <label class="fancy-checkbox">
+        <input type="checkbox" value="articulation">
+        <span class="checkmark"></span>
+        Articulation
+      </label>
+      <label class="fancy-checkbox">
         <input type="checkbox" value="aac">
         <span class="checkmark"></span>
         AAC
@@ -47,13 +51,28 @@
         <span class="checkmark"></span>
         Social Communication
       </label>
+      <label class="fancy-checkbox">
+        <input type="checkbox" value="literacy">
+        <span class="checkmark"></span>
+        Literacy & Phonological Awareness
+      </label>
+      <label class="fancy-checkbox">
+        <input type="checkbox" value="attention">
+        <span class="checkmark"></span>
+        Attention & Listening
+      </label>
+      <label class="fancy-checkbox">
+        <input type="checkbox" value="fluency">
+        <span class="checkmark"></span>
+        Fluency
+      </label>
     </div>
     
     <!-- Sections will be inserted here -->
     <div id="sections"></div>
 
     <div class="section">
-      <h2>✍️ Personal Anecdote</h2>
+      <h1>Personal Anecdote</h2>
       <label for="anecdotePrompt">Prompt:</label>
       <select id="anecdotePrompt"></select>
       <textarea id="anecdoteText" placeholder="Write your personal reflection here..."></textarea>
@@ -62,12 +81,13 @@
   </div>
 
   <div class="right">
-    <h2>📄 Live Preview</h2>
+    <h1>📄 Live Preview</h1>
     <div id="output">Your note will appear here...</div>
     <button id="copyBtn">Copy to Clipboard</button>
     <span id="copyMsg" style="margin-left:8px;color:#007aff;display:none;">Copied!</span>
   </div>
 
   <script src="script.js"></script>
+  
 </body>
 </html>
