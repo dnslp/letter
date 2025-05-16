@@ -6,6 +6,22 @@ body {
     flex-direction: row;
     height: 100vh;
   }
+  .badge {
+    display: inline-block;
+    min-width: 1.8em;
+    padding: 0.18em 0.7em;
+    border-radius: 999px;
+    background: #e0e0e0;
+    color: #444;
+    font-weight: bold;
+    margin-left: 0.4em;
+    text-align: center;
+    font-size: 1em;
+  }
+  .badge.active {
+    background: #007aff;
+    color: #fff;
+  }
   
   .left, .right {
     padding: 20px;
@@ -110,6 +126,15 @@ body {
   #copyBtn:hover {
     background: #005bb5;
   }
+  button, .control { transition: background 0.2s, box-shadow 0.2s; }
+button:hover, button:focus {
+  background: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,90,255,0.3);
+}
+h2:hover{
+color: #005bb5;
+
+}
   
   @media (max-width: 900px) {
     body {
