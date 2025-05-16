@@ -3,6 +3,7 @@ const categories = [
     {
       title: "Opening Statements",
       type: "sentence",
+      coreGroup: "opening",
       statements: [
         "{StudentName} started this year with curiosity and a willingness to try new things.",
         "Throughout the year, I saw {him/her/them} approach challenges with a positive mindset.",
@@ -20,6 +21,7 @@ const categories = [
     {
       title: "Strengths & Positive Attributes",
       type: "sentence",
+      coreGroup: "strengths",
       statements: [
         "{StudentName} is kind to peers and helps others feel included.",
         "{He/She/They} asks thoughtful questions and listens with care.",
@@ -42,6 +44,7 @@ const categories = [
     {
       title: "Speech & Language Progress",
       type: "list",
+      coreGroup: "progress",
       statements: [
         "{StudentName} improved accuracy with target speech sounds.",
         "{He/She/They} uses new words and phrases to share ideas.",
@@ -64,6 +67,7 @@ const categories = [
     {
       title: "Transition Suggestions",
       type: "sentence",
+      coreGroup: "transition",
       statements: [
         "{StudentName} will benefit from consistent routines as {he/she/they} transitions to a new setting.",
         "Visual schedules and written reminders may support {him/her/them} during transitions.",
@@ -86,6 +90,7 @@ const categories = [
     {
       title: "Closing Statements",
       type: "sentence",
+      coreGroup: "closing",
       statements: [
         "I am excited to see what {StudentName} will accomplish next year.",
         "With continued support, {he/she/they} is ready for the next chapter.",
@@ -104,10 +109,104 @@ const categories = [
         "Best wishes to {him/her/them} and family.",
         "{StudentName} has so much to look forward to!"
       ]
+    },
+    {
+      title: "Receptive Language Goals",
+      goal: "receptive",
+      type: "list",
+      statements: [
+        "{StudentName} follows multi-step directions with improved independence.",
+        "{He/She/They} understands and responds to a wider range of questions.",
+        "{He/She/They} identifies key details in stories or classroom discussions.",
+        "{He/She/They} comprehends new vocabulary words in context.",
+        "{He/She/They} demonstrates understanding of basic and complex concepts.",
+        "{He/She/They} recognizes and interprets figurative language and idioms.",
+        "{He/She/They} understands classroom routines and transitions more easily.",
+        "{He/She/They} shows growth in listening comprehension during group activities.",
+        "{He/She/They} follows directions with fewer repetitions or cues.",
+        "{StudentName} asks for clarification when unsure, supporting self-advocacy."
+      ]
+    },
+    {
+      title: "Expressive Language Goals",
+      goal: "expressive",
+      type: "list",
+      statements: [
+        "{StudentName} uses more complete and detailed sentences when speaking.",
+        "{He/She/They} retells stories and events with greater organization.",
+        "{He/She/They} selects and uses precise vocabulary to express ideas.",
+        "{He/She/They} describes personal experiences and classroom topics clearly.",
+        "{He/She/They} answers open-ended questions with expanded responses.",
+        "{He/She/They} asks questions to learn more or clarify information.",
+        "{He/She/They} uses transition words to connect ideas in speech.",
+        "{He/She/They} produces grammatically correct sentences more consistently.",
+        "{He/She/They} shares ideas in group discussions with increased confidence.",
+        "{StudentName} demonstrates progress in expressive language across settings."
+      ]
+    },
+    {
+      title: "Articulation Goals",
+      goal: "articulation",
+      type: "list",
+      statements: [
+        "{StudentName} produces target sounds accurately in structured tasks.",
+        "{He/She/They} uses clear speech during classroom activities.",
+        "{He/She/They} self-corrects speech errors with minimal prompting.",
+        "{He/She/They} generalizes correct sound production to conversations.",
+        "{He/She/They} demonstrates increased awareness of speech sound placement.",
+        "{He/She/They} applies strategies to improve overall intelligibility.",
+        "{He/She/They} produces sounds accurately in longer sentences.",
+        "{He/She/They} recognizes and repairs communication breakdowns related to speech.",
+        "{He/She/They} maintains speech clarity across various settings.",
+        "{StudentName} is proud of progress in articulation skills."
+      ]
+    },
+    {
+      title: "AAC Goals",
+      goal: "aac",
+      type: "list",
+      statements: [
+        "{StudentName} uses AAC to communicate wants and needs with greater independence.",
+        "{He/She/They} navigates the AAC device to find words and phrases.",
+        "{He/She/They} initiates communication using AAC in group activities.",
+        "{He/She/They} combines symbols or words to create sentences.",
+        "{He/She/They} requests help or clarification using the device.",
+        "{He/She/They} repairs breakdowns by adding or changing AAC messages.",
+        "{He/She/They} explores new vocabulary on the AAC system.",
+        "{He/She/They} uses AAC in both structured and unstructured settings.",
+        "{He/She/They} responds to questions using AAC with less support.",
+        "{StudentName} is developing confidence as an AAC communicator."
+      ]
+    },
+    {
+      title: "Social Communication Goals",
+      goal: "social",
+      type: "list",
+      statements: [
+        "{StudentName} greets peers and adults appropriately.",
+        "{He/She/They} uses eye contact and body language in conversation.",
+        "{He/She/They} takes turns and listens during group discussions.",
+        "{He/She/They} asks and answers questions in social situations.",
+        "{He/She/They} recognizes and responds to nonverbal cues.",
+        "{He/She/They} joins group activities and play with increasing confidence.",
+        "{He/She/They} uses strategies to resolve conflicts with peers.",
+        "{He/She/They} maintains topics and makes relevant comments.",
+        "{He/She/They} shows empathy and understanding in interactions.",
+        "{StudentName} applies social communication skills across settings."
+      ]
     }
+    
+    
+    
+    
+    
+    
   ];
   
-  // ====== Pronoun Map ======
+ // ====== Your Categories Array (leave unchanged from your commit) ======
+// ... (your full categories array here; I left it out for brevity)
+
+// ====== Pronoun Map ======
 const pronounMap = {
   she: { sub: "she", obj: "her", poss: "her", refl: "herself" },
   he: { sub: "he", obj: "him", poss: "his", refl: "himself" },
@@ -122,46 +221,64 @@ const anecdotePrompts = [
   "Reflect on a challenge {StudentName} overcame this year."
 ];
 
+// ====== Global for Section Order ======
+window.orderedCategories = [];
+
+// ====== Anecdote Prompt Renderer ======
 function renderAnecdotePrompt(studentName = "{StudentName}") {
   const select = document.getElementById("anecdotePrompt");
-  const currentValue = select.value; // preserve the current selection, if any
-
-  select.innerHTML = ""; // clear existing options
-
+  if (!select) return;
+  const currentValue = select.value;
+  select.innerHTML = "";
   anecdotePrompts.forEach(template => {
     const option = document.createElement("option");
-    // Replace {StudentName} with the actual name (or fallback)
     option.value = template.replace(/{StudentName}/g, studentName || "{StudentName}");
     option.textContent = template.replace(/{StudentName}/g, studentName || "{StudentName}");
-    // Optionally preserve selection on name change
-    if (option.value === currentValue) {
-      option.selected = true;
-    }
+    if (option.value === currentValue) option.selected = true;
     select.appendChild(option);
   });
 }
-
 
 // ====== Capitalization Helper ======
 function capitalize(word) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
 
-// ====== Render Sections (with Name/Pronoun, Badge per Section) ======
+// ====== Render Sections ======
 function renderSections(studentName = "{StudentName}", pronounSet = "she") {
   const p = pronounMap[pronounSet];
   const container = document.getElementById("sections");
 
   // Track selected templates before rerender
   const previouslySelected = {};
-  document.querySelectorAll(".section").forEach((section) => {
+  document.querySelectorAll(".section").forEach(section => {
     Array.from(section.querySelectorAll(".button.selected")).forEach(btn => {
       previouslySelected[btn.dataset.orig] = true;
     });
   });
 
   container.innerHTML = "";
-  categories.forEach((cat, i) => {
+
+  // --- FILTERING AND ORDERING ---
+  const activeGoals = Array.from(document.querySelectorAll('#goalAreaChooser input[type="checkbox"]:checked')).map(cb => cb.value);
+
+  const coreBeforeGoals = categories.filter(cat => !cat.goal && (
+    !cat.coreGroup ||
+    cat.coreGroup === "opening" ||
+    cat.coreGroup === "strengths" ||
+    cat.coreGroup === "progress"
+  ));
+
+  const goalCategories = categories.filter(cat => cat.goal && activeGoals.includes(cat.goal));
+  const coreAfterGoals = categories.filter(cat => !cat.goal && cat.coreGroup && (
+    cat.coreGroup === "transition" ||
+    cat.coreGroup === "closing"
+  ));
+
+  // ✅ Define order AFTER arrays are built!
+  window.orderedCategories = [...coreBeforeGoals, ...goalCategories, ...coreAfterGoals];
+
+  window.orderedCategories.forEach((cat, i) => {
     const section = document.createElement("div");
     section.classList.add("section");
     section.dataset.index = i;
@@ -171,7 +288,7 @@ function renderSections(studentName = "{StudentName}", pronounSet = "she") {
     header.addEventListener("click", () => {
       section.classList.toggle("open");
       header.innerHTML = `${section.classList.contains("open") ? '▼' : '▸'} ${cat.title} <span class="badge"></span>`;
-      updateBadges(); // ensure badge is up-to-date after expand/collapse
+      updateBadges();
     });
 
     const content = document.createElement("div");
@@ -181,19 +298,15 @@ function renderSections(studentName = "{StudentName}", pronounSet = "she") {
       const btn = document.createElement("button");
       btn.className = "button";
       btn.type = "button";
-      btn.dataset.orig = text; // Store the raw template
-
-      // Live replacement for button display
+      btn.dataset.orig = text;
       btn.textContent = text
         .replace(/{StudentName}/g, studentName || "{StudentName}")
-        .replace(/{he\/she\/they}/gi, (m) => m[1] === 'H' ? capitalize(p.sub) : p.sub)
-        .replace(/{him\/her\/them}/gi, (m) => m[1] === 'H' ? capitalize(p.obj) : p.obj)
-        .replace(/{his\/her\/their}/gi, (m) => m[1] === 'H' ? capitalize(p.poss) : p.poss)
-        .replace(/{himself\/herself\/themself}/gi, (m) => m[1] === 'H' ? capitalize(p.refl) : p.refl);
+        .replace(/{he\/she\/they}/gi, m => m[1] === 'H' ? capitalize(p.sub) : p.sub)
+        .replace(/{him\/her\/them}/gi, m => m[1] === 'H' ? capitalize(p.obj) : p.obj)
+        .replace(/{his\/her\/their}/gi, m => m[1] === 'H' ? capitalize(p.poss) : p.poss)
+        .replace(/{himself\/herself\/themself}/gi, m => m[1] === 'H' ? capitalize(p.refl) : p.refl);
 
-      // Restore selection state
       if (previouslySelected[text]) btn.classList.add("selected");
-
       btn.addEventListener("click", () => {
         btn.classList.toggle("selected");
         updatePreview();
@@ -211,7 +324,66 @@ function renderSections(studentName = "{StudentName}", pronounSet = "she") {
   renderAnecdotePrompt(studentName);
 }
 
-// ====== Update Selection Badges (Scoped to Each Section) ======
+// ====== Preview Renderer ======
+function updatePreview() {
+  const name = document.getElementById("studentName").value.trim() || "{StudentName}";
+  const pronounSet = document.getElementById("pronouns").value;
+  const p = pronounMap[pronounSet];
+  let letter = "";
+
+  function replacePronouns(str, useName = false) {
+    return str
+      .replace(/{StudentName}/g, useName ? name : p.sub)
+      .replace(/{he\/she\/they}/gi, m => m[1] === 'H' ? capitalize(p.sub) : p.sub)
+      .replace(/{him\/her\/them}/gi, m => m[1] === 'H' ? capitalize(p.obj) : p.obj)
+      .replace(/{his\/her\/their}/gi, m => m[1] === 'H' ? capitalize(p.poss) : p.poss)
+      .replace(/{himself\/herself\/themself}/gi, m => m[1] === 'H' ? capitalize(p.refl) : p.refl);
+  }
+
+  (window.orderedCategories || []).forEach((cat, i) => {
+    const section = document.querySelector(`.section[data-index='${i}']`);
+    if (!section) return;
+    const selectedBtns = Array.from(section.querySelectorAll('.button.selected'));
+    const selected = selectedBtns.map(btn => btn.dataset.orig);
+
+    if (!selected.length) return;
+
+    if (cat.type === "list") {
+      letter += cat.title + ":\n";
+      selected.forEach((s, idx) => {
+        let replaced;
+        if (selected.length === 1 || idx === 0 || idx === selected.length - 1) {
+          replaced = replacePronouns(s, true);
+        } else {
+          replaced = replacePronouns(s, false);
+        }
+        letter += "• " + replaced + "\n";
+      });
+      letter += "\n";
+    } else {
+      let para = "";
+      selected.forEach((s, idx) => {
+        let replaced;
+        if (selected.length === 1 || idx === 0 || idx === selected.length - 1) {
+          replaced = replacePronouns(s, true);
+        } else {
+          replaced = replacePronouns(s, false);
+        }
+        para += replaced + " ";
+      });
+      letter += para.trim() + "\n\n";
+    }
+  });
+
+  const anecdote = document.getElementById("anecdoteText")?.value.trim();
+  if (anecdote) {
+    letter += anecdote + "\n\n";
+  }
+
+  document.getElementById("output").textContent = letter.trim();
+}
+
+// ====== Badge Updater ======
 function updateBadges() {
   document.querySelectorAll(".section").forEach((section) => {
     const count = section.querySelectorAll(".button.selected").length;
@@ -223,70 +395,7 @@ function updateBadges() {
   });
 }
 
-// ====== Smart Pronoun Replacement in Letter Preview with Name Sandwich ======
-function updatePreview() {
-
-  const nameInput = document.getElementById("studentName");
-  const name = nameInput ? nameInput.value.trim() : "{StudentName}";
-  const pronounSet = document.getElementById("pronouns").value;
-  const p = pronounMap[pronounSet];
-  let letter = "";
-  renderAnecdotePrompt(name);
-  // Utility: Replace all pronoun placeholders (upper/lowercase)
-  function replacePronouns(str, useName = false) {
-    return str
-      .replace(/{StudentName}/g, useName ? name : p.sub)
-      .replace(/{he\/she\/they}/gi, (m) => m[1] === 'H' ? capitalize(p.sub) : p.sub)
-      .replace(/{him\/her\/them}/gi, (m) => m[1] === 'H' ? capitalize(p.obj) : p.obj)
-      .replace(/{his\/her\/their}/gi, (m) => m[1] === 'H' ? capitalize(p.poss) : p.poss)
-      .replace(/{himself\/herself\/themself}/gi, (m) => m[1] === 'H' ? capitalize(p.refl) : p.refl);
-  }
-
-  categories.forEach((cat, i) => {
-    const section = document.querySelector(`.section[data-index='${i}']`);
-    if (!section) return;
-    const selectedBtns = Array.from(section.querySelectorAll('.button.selected'));
-    const selected = selectedBtns.map(btn => btn.dataset.orig);
-
-    if (!selected.length) return;
-
-    if (cat.type === "list") {
-      selected.forEach((s, idx) => {
-        let replaced;
-        if (selected.length === 1 || idx === 0 || idx === selected.length - 1) {
-          replaced = replacePronouns(s, true); // Use name for first/last bullet
-        } else {
-          replaced = replacePronouns(s, false); // Use pronoun for middle bullets
-        }
-        letter += "• " + replaced + "\n";
-      });
-      letter += "\n";
-    } else {
-      // Sentences: name sandwich logic
-      let para = "";
-      selected.forEach((s, idx) => {
-        let replaced;
-        if (selected.length === 1 || idx === 0 || idx === selected.length - 1) {
-          replaced = replacePronouns(s, true); // Use name for first/last
-        } else {
-          replaced = replacePronouns(s, false); // Pronouns for middle
-        }
-        para += replaced + " ";
-      });
-      letter += para.trim() + "\n\n";
-    }
-  });
-
-  // Add anecdote if present
-  const anecdote = document.getElementById("anecdoteText").value.trim();
-  if (anecdote) {
-    letter += anecdote + "\n\n";
-  }
-
-  document.getElementById("output").textContent = letter.trim();
-}
-
-// ====== DOMContentLoaded and Event Handling ======
+// ====== DOM Ready & Events ======
 document.addEventListener("DOMContentLoaded", function () {
   function renderAndPreview() {
     renderSections(
@@ -297,15 +406,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   renderAndPreview();
-
   document.getElementById("studentName").addEventListener("input", renderAndPreview);
   document.getElementById("pronouns").addEventListener("change", renderAndPreview);
+  document.querySelectorAll('#goalAreaChooser input[type="checkbox"]').forEach(cb => {
+    cb.addEventListener('change', renderAndPreview);
+  });
   document.getElementById("anecdoteText").addEventListener("input", updatePreview);
   document.getElementById("anecdotePrompt").addEventListener("change", (e) => {
     document.getElementById("anecdoteText").placeholder = e.target.value;
   });
 
-  // Copy button logic
   document.getElementById("copyBtn").addEventListener("click", () => {
     const text = document.getElementById("output").textContent;
     navigator.clipboard.writeText(text).then(() => {
