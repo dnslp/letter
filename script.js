@@ -226,7 +226,8 @@ function updateBadges() {
 // ====== Smart Pronoun Replacement in Letter Preview with Name Sandwich ======
 function updatePreview() {
 
-  const name = document.getElementById("studentName").value.trim() || "{StudentName}";
+  const nameInput = document.getElementById("studentName");
+  const name = nameInput ? nameInput.value.trim() : "{StudentName}";
   const pronounSet = document.getElementById("pronouns").value;
   const p = pronounMap[pronounSet];
   let letter = "";
