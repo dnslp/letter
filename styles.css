@@ -241,6 +241,29 @@ color: #005bb5;
   transition: color 0.16s, color 0.16s;
   text-decoration: underline;
 }
+#disclaimer {
+  max-width: 720px;
+  margin: 3em auto 2em;
+  padding: 1.5em 1.2em 1.5em 2.2em;
+  background: #f6f8fb;
+  color: #355;
+  border-radius: 15px;
+  box-shadow: 0 2px 16px 0 rgba(60,80,100,0.08);
+  font-size: 1em;
+}
+#disclaimer h3 {
+  margin-top: 0;
+  font-size: 1.14em;
+  color: #196;
+}
+#disclaimer ul {
+  padding-left: 1.2em;
+  margin-top: 0;
+}
+#disclaimer li {
+  margin-bottom: 0.7em;
+}
+
   
   @media (max-width: 900px) {
     body {
