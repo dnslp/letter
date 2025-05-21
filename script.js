@@ -405,6 +405,15 @@ const anecdotePrompts = [
   "Write about a time {StudentName} made someone laugh or smile.",
   "Reflect on a challenge {StudentName} overcame this year."
 ];
+
+const badge = document.getElementById('no-cookie-badge');
+const modal = document.getElementById('disclaimer-modal');
+const close = modal.querySelector('.modal-close');
+
+badge.addEventListener('click', () => modal.classList.add('open'));
+close.addEventListener('click', () => modal.classList.remove('open'));
+
+
 function smartReplace(sentence, idx, total, name, pronounSet, pronounMapObj) {
   // For they/them, use name for first and last, plural they/them for middle
   if (pronounSet === "they") {
